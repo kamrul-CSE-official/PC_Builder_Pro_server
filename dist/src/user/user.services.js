@@ -23,7 +23,7 @@ const registerUserService = (data) => __awaiter(void 0, void 0, void 0, function
                 email: data.email,
                 name: data.name,
                 profilePic: data.profilePic,
-                password: hashedPassword, // Store hashed password
+                password: hashedPassword,
             },
         });
         return newUser;
@@ -32,7 +32,17 @@ const registerUserService = (data) => __awaiter(void 0, void 0, void 0, function
         throw new Error("Failed to register user!");
     }
 });
+const allUserGetService = () => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const users = yield prisma.user.findMany();
+        return users;
+    }
+    catch (error) {
+        throw new Error("Failed to retrieve users!");
+    }
+});
 const userService = {
     registerUserService,
+    allUserGetService,
 };
 exports.default = userService;

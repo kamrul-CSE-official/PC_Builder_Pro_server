@@ -34,7 +34,20 @@ const loginUserController = (req, res) => __awaiter(void 0, void 0, void 0, func
     console.log("login.......");
 });
 const allusersController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log("All users");
+    try {
+        const result = yield user_services_1.default.allUserGetService();
+        (0, apiResponse_1.sendApiResponse)(res, {
+            message: 'Successfully get all users.',
+            status: 200,
+            data: result,
+        });
+    }
+    catch (error) {
+        (0, apiResponse_1.sendApiResponse)(res, {
+            message: 'Failed to get user.',
+            status: 500,
+        });
+    }
 });
 const userController = {
     registerUserController,
