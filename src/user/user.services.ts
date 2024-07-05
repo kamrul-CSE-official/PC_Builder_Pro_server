@@ -21,18 +21,40 @@ const registerUserService = async (data: IUser): Promise<PrismaUser> => {
   }
 }
 
-const allUserGetService = async (): Promise<PrismaUser[]> => { // Return an array of users
+const loginUserService = async (data: {
+  email: string;
+  password: string;
+}): Promise<PrismaUser | null> => {
+  try {
+    const user = await prisma.user.findUnique({ where: { email: data.email } });
+    if (!user) {
+      throw new Error("User not found!");
+    }
+
+    const isPasswordValid = await bcrypt.compare(data.password, user.password);
+    if (!isPasswordValid) {
+      throw new Error("Invalid credentials!");
+    }
+
+    return user;
+  } catch (error: any) {
+    throw new Error("Failed to login user: " + error.message);
+  }
+};
+
+const allUserGetService = async (): Promise<PrismaUser[]> => {
   try {
     const users = await prisma.user.findMany();
     return users;
   } catch (error) {
     throw new Error("Failed to retrieve users!");
   }
-}
+};
 
 const userService = {
   registerUserService,
-  allUserGetService,  
+  loginUserService,
+  allUserGetService,
 };
 
 export default userService;
