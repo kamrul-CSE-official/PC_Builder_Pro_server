@@ -13,19 +13,7 @@ export type IUser = {
     createdAt?: Date;
   };
   
-  export type IProduct = {
-    id: string;
-    model: string;
-    title: string;
-    description: string;
-    price: number;
-    image: string;
-    seller: User;
-    sellerId: string;
-    reviews?: Review[];
-    comments?: Comment[];
-    createdAt?: Date;
-  };
+  
   
   export type IComment = {
     id: string;

@@ -3,7 +3,9 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import errorHandler from "./utils/errorHandler";
 import notFoundHandler from "./utils/notFoundHandler";
+
 import userRoutes from "./user/user.route";
+import productRoutes from "./product/product.route";
 
 const app = express();
 
@@ -28,12 +30,13 @@ app.use(express.json());
 app.use(cookieParser());
 
 // Root route handler
-app.get("/", (req, res) => {
+app.get("/api/v1/", (req, res) => {
   res.send("PC-Builder-Pro server is running...🏃");
 });
 
 // API routes
 app.use("/api/v1/users", userRoutes);
+app.use("/api/v1/products", productRoutes);
 
 // Global error handling middleware
 app.use(notFoundHandler);

@@ -11,8 +11,8 @@ const registerUserService = async (data: IUser): Promise<PrismaUser> => {
       data: {
         email: data.email,
         name: data.name,
-        profilePic: data.profilePic,
-        password: hashedPassword,  
+        profilePic: data?.profilePic || "https://avatar.iran.liara.run/public",
+        password: hashedPassword,
       },
     });
     return newUser;

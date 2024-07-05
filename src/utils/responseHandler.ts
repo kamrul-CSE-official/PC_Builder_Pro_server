@@ -1,9 +1,9 @@
-import { Request, Response, NextFunction } from "express";
+import { NextFunction, Response } from "express";
 
 export const handleSuccess = (
   res: Response,
   data: any,
-  message: string = "Success",
+  message: string = "Success"
 ) => {
   res.status(200).json({
     status: "success",
@@ -16,14 +16,14 @@ export const handleError = (
   res: Response,
   error: any,
   statusCode: number = 500,
-  message: string = "An error occurred",
+  message: string = "An error occurred"
 ) => {
-  if (error) {
-    const validationErrors = error.errors.map((err:any) => err.message);
+  if (error && error.errors) {
+    const validationErrors = error.errors.map((err: any) => err.message);
     res.status(400).json({
       status: "error",
       message: "Validation failed",
-      errors: validationErrors[0],
+      errors: validationErrors,
     });
   } else {
     res.status(statusCode).json({

@@ -1,9 +1,11 @@
 import dotenv from 'dotenv';
-dotenv.config(); 
+
+dotenv.config();
 
 type IEnv = {
   port: number;
-  db_url: string;
+  dbUrl: string;
+  nodeEnv: string;
   jwt: {
     accessTokenSecret: string;
     accessTokenExpiresIn: number;
@@ -14,14 +16,13 @@ type IEnv = {
 
 const envConfig: IEnv = {
   port: Number(process.env.PORT) || 5000,
-  db_url: process.env.DATABASE_URL || "",
+  dbUrl: process.env.DATABASE_URL || "",
+  nodeEnv: process.env.NODE_ENV || "production",
   jwt: {
     accessTokenSecret: process.env.ACCESS_TOKEN_SECRET || "",
-    accessTokenExpiresIn:
-      Number(process.env.ACCESSTOKENEXPIRE) || 1000 * 60 * 5,
+    accessTokenExpiresIn: Number(process.env.ACCESS_TOKEN_EXPIRE) || 600, // 10 minutes
     refreshTokenSecret: process.env.REFRESH_TOKEN_SECRET || "",
-    refreshTokenExpiresIn:
-      Number(process.env.DATABASE_URL) || 1000 * 60 * 60 * 24,
+    refreshTokenExpiresIn: Number(process.env.REFRESH_TOKEN_EXPIRE) || 2592000, // 30 days
   },
 };
 
