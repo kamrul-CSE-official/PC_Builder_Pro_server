@@ -30,7 +30,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 // Root route handler
-app.get("/api/v1/", (req, res) => {
+app.get("/", (req, res) => {
   res.send("PC-Builder-Pro server is running...🏃");
 });
 
