@@ -12,6 +12,11 @@ const routes = [
   },
   {
     method: "GET",
+    path: "/best-sell",
+    controller: productController.getBestSellingProductsController,
+  },
+  {
+    method: "GET",
     path: "/brand-name/:type",
     controller: productController.getAllBrandNameController,
   },
@@ -19,6 +24,11 @@ const routes = [
     method: "POST",
     path: "/add-products",
     controller: productController.addMultipleProducts,
+  },
+  {
+    method: "POST",
+    path: "/buy",
+    controller: productController.buyProductCOntroller,
   },
 ];
 

@@ -103,10 +103,39 @@ const allusersController = async (req: Request, res: Response) => {
   }
 };
 
+const getProductsBoughtByUserController = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+    const { userId } = req.params;
+
+    if (!userId) {
+      return sendApiResponse(res, {
+        message: "Buyer ID is required",
+        status: 400,
+      });
+    }
+
+    const sales = await userService.getProductsBoughtByUserService(userId);
+    return sendApiResponse(res, {
+      message: "Successfully retrieved products bought by user",
+      status: 200,
+      data: sales,
+    });
+  } catch (error) {
+    return sendApiResponse(res, {
+      message: "Failed to retrieve products bought by user",
+      status: 500,
+    });
+  }
+};
+
 const userController = {
   registerUserController,
   loginUserController,
   allusersController,
+  getProductsBoughtByUserController,
 };
 
 export default userController;

@@ -63,10 +63,61 @@ const getAllBrandNameController = async (req: Request, res: Response) => {
   }
 };
 
+const buyProductCOntroller = async (req: Request, res: Response) => {
+  try {
+    const { buyerId, productIds } = req.body;
+    if (
+      !buyerId ||
+      !productIds ||
+      !Array.isArray(productIds) ||
+      productIds.length === 0
+    ) {
+      return res
+        .status(400)
+        .json({ message: "Buyer ID and an array of Product IDs are required" });
+    }
+
+    const buy = await productService.createBuyService(buyerId, productIds);
+
+    sendApiResponse(res, {
+      message: "Buy created successfully.",
+      status: 201,
+      data: buy,
+    });
+  } catch (err: any) {
+    sendApiResponse(res, {
+      message: "Fail to create buy product.",
+      status: 500,
+    });
+  }
+};
+
+const getBestSellingProductsController = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+    const bestSellingProducts =
+      await productService.getBestSellingProductsService();
+    return sendApiResponse(res, {
+      message: "Successfully retrieved best-selling products",
+      status: 200,
+      data: bestSellingProducts,
+    });
+  } catch (error) {
+    return sendApiResponse(res, {
+      message: "Failed to retrieve best-selling products",
+      status: 500,
+    });
+  }
+};
+
 const productController = {
   addMultipleProducts,
   getAllProductsController,
   getAllBrandNameController,
+  buyProductCOntroller,
+  getBestSellingProductsController,
 };
 
 export default productController;

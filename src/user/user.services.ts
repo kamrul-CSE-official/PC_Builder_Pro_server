@@ -55,10 +55,22 @@ const allUserGetService = async (): Promise<PrismaUser[]> => {
   }
 };
 
+const getProductsBoughtByUserService = async (buyerId: string) => {
+  try {
+    const sales = await prisma.sell.findMany({
+      where: { buyerId: buyerId },
+      include: { product: true, buyer: true },
+    });
+    return sales;
+  } catch (error) {
+    throw new Error("Failed to retrieve products bought by user!");
+  }
+};
 const userService = {
   registerUserService,
   loginUserService,
   allUserGetService,
+  getProductsBoughtByUserService,
 };
 
 export default userService;

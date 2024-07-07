@@ -11,6 +11,11 @@ const routes = [
     controller: userController.allusersController,
   },
   {
+    method: "GET",
+    path: "/purchases/:userId",
+    controller: userController.getProductsBoughtByUserController,
+  },
+  {
     method: "POST",
     path: "/register",
     controller: userController.registerUserController,
