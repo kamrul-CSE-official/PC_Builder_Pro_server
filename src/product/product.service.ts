@@ -1,4 +1,4 @@
-import { PrismaClient, Product as PrismaProduct } from "@prisma/client";
+import { PrismaClient, Product as PrismaProduct, Types } from "@prisma/client";
 import { IProduct } from "./product.types";
 
 const prisma = new PrismaClient();
@@ -25,16 +25,19 @@ const getAllProductsService = async (): Promise<PrismaProduct[]> => {
   }
 };
 
-const getAllBrandNameService = async (): Promise<string[]> => {
+const getAllBrandNameService = async (type: Types): Promise<string[]> => {
   try {
     const products = await prisma.product.findMany({
-      // @ts-ignore
       select: { brand: true },
-    }); // @ts-ignore
-    const uniqueBrands = [...new Set(products.map((product) => product.brand))];
+      where: { type: type },
+    });
+
+    const uniqueBrands = Array.from(
+      new Set(products.map((product) => product.brand))
+    );
     return uniqueBrands;
   } catch (error) {
-    throw new Error("Failed to find brand names!");
+    throw new Error("Failed to retrieve brand names!");
   }
 };
 

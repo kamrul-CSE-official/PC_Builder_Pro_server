@@ -12,7 +12,7 @@ const routes = [
   },
   {
     method: "GET",
-    path: "/brand-name",
+    path: "/brand-name/:type",
     controller: productController.getAllBrandNameController,
   },
   {

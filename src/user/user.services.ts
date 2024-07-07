@@ -1,12 +1,16 @@
 import bcrypt from 'bcrypt';
 import { PrismaClient, User as PrismaUser } from '@prisma/client';
 import { IUser } from './user.types';
+import envConfig from "../config/env.config";
 
 const prisma = new PrismaClient();
 
 const registerUserService = async (data: IUser): Promise<PrismaUser> => {
   try {
-    const hashedPassword = await bcrypt.hash(data.password, 10);
+    const hashedPassword = await bcrypt.hash(
+      data.password,
+      envConfig.bcrypt || 10
+    );
     const newUser = await prisma.user.create({
       data: {
         email: data.email,
@@ -19,7 +23,7 @@ const registerUserService = async (data: IUser): Promise<PrismaUser> => {
   } catch (error) {
     throw new Error("Failed to register user!");
   }
-}
+};
 
 const loginUserService = async (data: {
   email: string;
