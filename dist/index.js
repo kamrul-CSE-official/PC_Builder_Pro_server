@@ -16,36 +16,17 @@ const client_1 = require("@prisma/client");
 const env_config_1 = __importDefault(require("./config/env.config"));
 const app_1 = __importDefault(require("./app"));
 const prisma = new client_1.PrismaClient();
-function startServer() {
+function main() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            // await prisma.$connect();
             console.log("Database connected successfully 🎁");
             app_1.default.listen(env_config_1.default.port, () => {
                 console.log(`Server is running on port ${env_config_1.default.port} 🏃`);
             });
         }
         catch (error) {
-            console.error("Error connecting to the database:", error);
-            process.exit(1);
+            console.log("Error connecting to the database:", error);
         }
     });
 }
-/*
-process.on("SIGINT", async () => {
-  console.log(
-    "SIGINT signal received: closing HTTP server and disconnecting from database"
-  );
-  await prisma.$disconnect();
-  process.exit(0);
-});
-
-process.on("SIGTERM", async () => {
-  console.log(
-    "SIGTERM signal received: closing HTTP server and disconnecting from database"
-  );
-  await prisma.$disconnect();
-  process.exit(0);
-});
-*/
-startServer();
+main();
