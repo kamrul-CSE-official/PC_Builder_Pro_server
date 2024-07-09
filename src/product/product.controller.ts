@@ -112,12 +112,39 @@ const getBestSellingProductsController = async (
   }
 };
 
+const getSearchProductController = async (req: Request, res: Response) => {
+  try {
+    const { key } = req.params;
+
+    if (!key) {
+      return sendApiResponse(res, {
+        message: "Write something and then search again!",
+        status: 400,
+      });
+    }
+
+    const result = await productService.getSearchProductService(key);
+
+    sendApiResponse(res, {
+      message: "Successfully retrieved products.",
+      status: 200,
+      data: result,
+    });
+  } catch (err: any) {
+    sendApiResponse(res, {
+      message: "Failed to retrieve products.",
+      status: 500,
+    });
+  }
+};
+
 const productController = {
   addMultipleProducts,
   getAllProductsController,
   getAllBrandNameController,
   buyProductCOntroller,
   getBestSellingProductsController,
+  getSearchProductController,
 };
 
 export default productController;

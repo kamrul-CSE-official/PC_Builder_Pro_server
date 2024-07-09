@@ -1,6 +1,6 @@
 import { Review, Comment, User } from "@prisma/client";
 
-enum Types {
+export enum ITypes {
   MONITOR,
   MOTHERBOARD,
   RAM,
@@ -13,7 +13,7 @@ enum Types {
 
 export type IProduct = {
   id?: string;
-  type: Types;
+  type: ITypes;
   brand: string;
   model: string;
   title: string;

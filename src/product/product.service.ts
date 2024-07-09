@@ -1,7 +1,11 @@
 import { PrismaClient, Product as PrismaProduct, Types } from "@prisma/client";
-import { IProduct } from "./product.types";
+import { IProduct, ITypes } from "./product.types";
 
 const prisma = new PrismaClient();
+
+const isEnumValue = (key: string, enumObject: any): boolean => {
+  return Object.values(enumObject).includes(key.toUpperCase());
+};
 
 const addMultipleProductsService = async (
   datas: any[]
@@ -40,7 +44,6 @@ const getAllBrandNameService = async (type: Types): Promise<string[]> => {
     throw new Error("Failed to retrieve brand names!");
   }
 };
-
 
 const createBuyService = async (buyerId: string, productIds: string[]) => {
   try {
@@ -99,12 +102,42 @@ const getBestSellingProductsService = async () => {
   }
 };
 
+const getSearchProductService = async (key: string) => {
+  try {
+    const searchKeyUpperCase = key.toUpperCase();
+
+    const searchCriteria: any[] = [
+      { model: { contains: key, mode: "insensitive" } },
+      { brand: { contains: key, mode: "insensitive" } },
+      { title: { contains: key, mode: "insensitive" } },
+      { description: { contains: key, mode: "insensitive" } },
+    ];
+
+    // Add type condition only if the search key is a valid enum value
+    if (isEnumValue(key, Types)) {
+      searchCriteria.push({ type: { equals: searchKeyUpperCase as Types } });
+    }
+
+    const products = await prisma.product.findMany({
+      where: {
+        OR: searchCriteria,
+      },
+    });
+
+    return products;
+  } catch (error) {
+    console.error("Error retrieving products:", error);
+    throw new Error("Failed to retrieve search products!");
+  }
+};
+
 const productService = {
   addMultipleProductsService,
   getAllProductsService,
   getAllBrandNameService,
   createBuyService,
   getBestSellingProductsService,
+  getSearchProductService,
 };
 
 export default productService;

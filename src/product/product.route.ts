@@ -17,6 +17,11 @@ const routes = [
   },
   {
     method: "GET",
+    path: "/search/:key",
+    controller: productController.getSearchProductController,
+  },
+  {
+    method: "GET",
     path: "/brand-name/:type",
     controller: productController.getAllBrandNameController,
   },
