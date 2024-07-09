@@ -10,12 +10,12 @@ const handleSuccess = (res, data, message = "Success") => {
 };
 exports.handleSuccess = handleSuccess;
 const handleError = (res, error, statusCode = 500, message = "An error occurred") => {
-    if (error) {
+    if (error && error.errors) {
         const validationErrors = error.errors.map((err) => err.message);
         res.status(400).json({
             status: "error",
             message: "Validation failed",
-            errors: validationErrors[0],
+            errors: validationErrors,
         });
     }
     else {

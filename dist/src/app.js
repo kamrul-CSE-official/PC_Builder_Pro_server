@@ -9,6 +9,7 @@ const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const errorHandler_1 = __importDefault(require("./utils/errorHandler"));
 const notFoundHandler_1 = __importDefault(require("./utils/notFoundHandler"));
 const user_route_1 = __importDefault(require("./user/user.route"));
+const product_route_1 = __importDefault(require("./product/product.route"));
 const app = (0, express_1.default)();
 // Define allowed origins
 const allowedOrigins = ["http://localhost:3000"];
@@ -34,6 +35,7 @@ app.get("/", (req, res) => {
 });
 // API routes
 app.use("/api/v1/users", user_route_1.default);
+app.use("/api/v1/products", product_route_1.default);
 // Global error handling middleware
 app.use(notFoundHandler_1.default);
 app.use(errorHandler_1.default);
