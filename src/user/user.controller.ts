@@ -2,8 +2,8 @@ import { Request, Response } from "express";
 import { PrismaClient } from "@prisma/client";
 import userService from "./user.services";
 import { sendApiResponse } from "../utils/apiResponse";
-import { generateAccessToken, generateRefreshToken } from "../utils/jwtToken";
 import envConfig from "../config/env.config";
+import { generateAccessToken, generateRefreshToken } from "../utils/jwtToken";
 
 const prisma = new PrismaClient();
 

@@ -6,8 +6,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const client_1 = require("@prisma/client");
 const user_services_1 = __importDefault(require("./user.services"));
 const apiResponse_1 = require("../utils/apiResponse");
-const jwtToken_1 = require("../utils/jwtToken");
 const env_config_1 = __importDefault(require("../config/env.config"));
+const jwtToken_1 = require("../utils/jwtToken");
 const prisma = new client_1.PrismaClient();
 const registerUserController = async (req, res) => {
     try {
