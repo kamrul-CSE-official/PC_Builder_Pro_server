@@ -1,4 +1,4 @@
-import express from "express";
+import express, { Application } from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import errorHandler from "./utils/errorHandler";
@@ -7,7 +7,7 @@ import notFoundHandler from "./utils/notFoundHandler";
 import userRoutes from "./user/user.route";
 import productRoutes from "./product/product.route";
 
-const app = express();
+const app: Application = express();
 
 // Define allowed origins
 const allowedOrigins = ["http://localhost:3000"];
@@ -28,6 +28,7 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use(cookieParser());
+app.use(express.urlencoded({ extended: true }));
 
 // Root route handler
 app.get("/", (req, res) => {
