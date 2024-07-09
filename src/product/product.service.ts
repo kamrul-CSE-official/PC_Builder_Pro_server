@@ -1,9 +1,4 @@
-import {
-  PrismaClient,
-  Product as PrismaProduct,
-  ProductTypes,
-} from "@prisma/client";
-import { IProduct, ITypes } from "./product.types";
+import { PrismaClient, Product, ProductTypes } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
@@ -24,7 +19,7 @@ const addMultipleProductsService = async (
   }
 };
 
-const getAllProductsService = async (): Promise<PrismaProduct[]> => {
+const getAllProductsService = async (): Promise<Product[]> => {
   try {
     const result = await prisma.product.findMany();
     return result;
@@ -88,7 +83,6 @@ const getBestSellingProductsService = async () => {
       take: 10, // Adjust the number to get top N best-selling products
     });
 
-    // Fetch product details for the best-selling products
     const products = await prisma.product.findMany({
       where: {
         id: {
@@ -97,7 +91,6 @@ const getBestSellingProductsService = async () => {
       },
     });
 
-    // Combine the count data with product details
     const result = bestSellingProducts.map((sell) => {
       const product = products.find((p) => p.id === sell.productId);
       return {
@@ -123,7 +116,6 @@ const getSearchProductService = async (key: string) => {
       { description: { contains: key, mode: "insensitive" } },
     ];
 
-    // Add type condition only if the search key is a valid enum value
     if (isEnumValue(key, ProductTypes)) {
       searchCriteria.push({
         type: { equals: searchKeyUpperCase as ProductTypes },

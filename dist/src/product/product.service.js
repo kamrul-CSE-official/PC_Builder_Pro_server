@@ -76,7 +76,6 @@ const getBestSellingProductsService = () => __awaiter(void 0, void 0, void 0, fu
             },
             take: 10, // Adjust the number to get top N best-selling products
         });
-        // Fetch product details for the best-selling products
         const products = yield prisma.product.findMany({
             where: {
                 id: {
@@ -84,7 +83,6 @@ const getBestSellingProductsService = () => __awaiter(void 0, void 0, void 0, fu
                 },
             },
         });
-        // Combine the count data with product details
         const result = bestSellingProducts.map((sell) => {
             const product = products.find((p) => p.id === sell.productId);
             return {
@@ -107,7 +105,6 @@ const getSearchProductService = (key) => __awaiter(void 0, void 0, void 0, funct
             { title: { contains: key, mode: "insensitive" } },
             { description: { contains: key, mode: "insensitive" } },
         ];
-        // Add type condition only if the search key is a valid enum value
         if (isEnumValue(key, client_1.ProductTypes)) {
             searchCriteria.push({
                 type: { equals: searchKeyUpperCase },
