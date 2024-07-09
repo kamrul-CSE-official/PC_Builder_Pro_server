@@ -18,6 +18,7 @@ async function startServer() {
   }
 }
 
+/*
 process.on("SIGINT", async () => {
   console.log(
     "SIGINT signal received: closing HTTP server and disconnecting from database"
@@ -33,5 +34,6 @@ process.on("SIGTERM", async () => {
   await prisma.$disconnect();
   process.exit(0);
 });
+*/
 
 startServer();

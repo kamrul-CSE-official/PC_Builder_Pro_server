@@ -31,14 +31,21 @@ function startServer() {
         }
     });
 }
-process.on("SIGINT", () => __awaiter(void 0, void 0, void 0, function* () {
-    console.log("SIGINT signal received: closing HTTP server and disconnecting from database");
-    yield prisma.$disconnect();
-    process.exit(0);
-}));
-process.on("SIGTERM", () => __awaiter(void 0, void 0, void 0, function* () {
-    console.log("SIGTERM signal received: closing HTTP server and disconnecting from database");
-    yield prisma.$disconnect();
-    process.exit(0);
-}));
+/*
+process.on("SIGINT", async () => {
+  console.log(
+    "SIGINT signal received: closing HTTP server and disconnecting from database"
+  );
+  await prisma.$disconnect();
+  process.exit(0);
+});
+
+process.on("SIGTERM", async () => {
+  console.log(
+    "SIGTERM signal received: closing HTTP server and disconnecting from database"
+  );
+  await prisma.$disconnect();
+  process.exit(0);
+});
+*/
 startServer();
