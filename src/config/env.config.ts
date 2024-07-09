@@ -16,7 +16,7 @@ type IEnv = {
 };
 
 const envConfig: IEnv = {
-  port: Number(process.env.PORT) || 5000,
+  port: Number(process.env.PORT) || 5001,
   dbUrl: process.env.DATABASE_URL || "",
   nodeEnv: process.env.NODE_ENV || "production",
   bcrypt: Number(process.env.BCRYPT_VALUE) || 10,
