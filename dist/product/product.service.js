@@ -1,22 +1,13 @@
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 const client_1 = require("@prisma/client");
 const prisma = new client_1.PrismaClient();
 const isEnumValue = (key, enumObject) => {
     return Object.values(enumObject).includes(key.toUpperCase());
 };
-const addMultipleProductsService = (datas) => __awaiter(void 0, void 0, void 0, function* () {
+const addMultipleProductsService = async (datas) => {
     try {
-        const result = yield prisma.product.createMany({
+        const result = await prisma.product.createMany({
             data: datas,
         });
         return result;
@@ -24,19 +15,19 @@ const addMultipleProductsService = (datas) => __awaiter(void 0, void 0, void 0, 
     catch (error) {
         throw new Error("Failed to add products!");
     }
-});
-const getAllProductsService = () => __awaiter(void 0, void 0, void 0, function* () {
+};
+const getAllProductsService = async () => {
     try {
-        const result = yield prisma.product.findMany();
+        const result = await prisma.product.findMany();
         return result;
     }
     catch (error) {
         throw new Error("Failed to find products!");
     }
-});
-const getAllBrandNameService = (type) => __awaiter(void 0, void 0, void 0, function* () {
+};
+const getAllBrandNameService = async (type) => {
     try {
-        const products = yield prisma.product.findMany({
+        const products = await prisma.product.findMany({
             select: { brand: true },
             where: { type },
         });
@@ -46,10 +37,10 @@ const getAllBrandNameService = (type) => __awaiter(void 0, void 0, void 0, funct
     catch (error) {
         throw new Error("Failed to retrieve brand names!");
     }
-});
-const createBuyService = (buyerId, productIds) => __awaiter(void 0, void 0, void 0, function* () {
+};
+const createBuyService = async (buyerId, productIds) => {
     try {
-        const sales = yield prisma.$transaction(productIds.map((productId) => prisma.sell.create({
+        const sales = await prisma.$transaction(productIds.map((productId) => prisma.sell.create({
             // @ts-ignore
             data: {
                 buyerId,
@@ -61,10 +52,10 @@ const createBuyService = (buyerId, productIds) => __awaiter(void 0, void 0, void
     catch (error) {
         throw new Error("Failed to create sales!");
     }
-});
-const getBestSellingProductsService = () => __awaiter(void 0, void 0, void 0, function* () {
+};
+const getBestSellingProductsService = async () => {
     try {
-        const bestSellingProducts = yield prisma.sell.groupBy({
+        const bestSellingProducts = await prisma.sell.groupBy({
             by: ["productId"],
             _count: {
                 productId: true,
@@ -76,7 +67,7 @@ const getBestSellingProductsService = () => __awaiter(void 0, void 0, void 0, fu
             },
             take: 10, // Adjust the number to get top N best-selling products
         });
-        const products = yield prisma.product.findMany({
+        const products = await prisma.product.findMany({
             where: {
                 id: {
                     in: bestSellingProducts.map((sell) => sell.productId),
@@ -95,8 +86,8 @@ const getBestSellingProductsService = () => __awaiter(void 0, void 0, void 0, fu
     catch (error) {
         throw new Error("Failed to retrieve best-selling products!");
     }
-});
-const getSearchProductService = (key) => __awaiter(void 0, void 0, void 0, function* () {
+};
+const getSearchProductService = async (key) => {
     try {
         const searchKeyUpperCase = key.toUpperCase();
         const searchCriteria = [
@@ -110,7 +101,7 @@ const getSearchProductService = (key) => __awaiter(void 0, void 0, void 0, funct
                 type: { equals: searchKeyUpperCase },
             });
         }
-        const products = yield prisma.product.findMany({
+        const products = await prisma.product.findMany({
             where: {
                 OR: searchCriteria,
             },
@@ -121,7 +112,7 @@ const getSearchProductService = (key) => __awaiter(void 0, void 0, void 0, funct
         console.error("Error retrieving products:", error);
         throw new Error("Failed to retrieve search products!");
     }
-});
+};
 const productService = {
     addMultipleProductsService,
     getAllProductsService,

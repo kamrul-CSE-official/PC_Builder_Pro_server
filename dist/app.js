@@ -32,7 +32,7 @@ app.use((0, cookie_parser_1.default)());
 app.use(express_1.default.urlencoded({ extended: true }));
 // Root route handler
 app.get("/", (req, res) => {
-    res.send("PC-Builder-Pro server is running...🏃");
+    res.send("Alhamdullah PC-Builder-Pro server is running...🏃");
 });
 // API routes
 app.use("/api/v1/users", user_route_1.default);

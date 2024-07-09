@@ -1,13 +1,4 @@
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -18,9 +9,9 @@ const apiResponse_1 = require("../utils/apiResponse");
 const jwtToken_1 = require("../utils/jwtToken");
 const env_config_1 = __importDefault(require("../config/env.config"));
 const prisma = new client_1.PrismaClient();
-const registerUserController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const registerUserController = async (req, res) => {
     try {
-        const user = yield prisma.user.findUnique({
+        const user = await prisma.user.findUnique({
             where: { email: req.body.email },
         });
         if (user) {
@@ -29,7 +20,7 @@ const registerUserController = (req, res) => __awaiter(void 0, void 0, void 0, f
                 status: 404,
             });
         }
-        const result = yield user_services_1.default.registerUserService(req.body);
+        const result = await user_services_1.default.registerUserService(req.body);
         (0, apiResponse_1.sendApiResponse)(res, {
             message: "Successfully registered user.",
             status: 200,
@@ -42,10 +33,10 @@ const registerUserController = (req, res) => __awaiter(void 0, void 0, void 0, f
             status: 500,
         });
     }
-});
-const loginUserController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+};
+const loginUserController = async (req, res) => {
     try {
-        const user = yield prisma.user.findUnique({
+        const user = await prisma.user.findUnique({
             where: { email: req.body.email },
         });
         if (!user) {
@@ -54,7 +45,7 @@ const loginUserController = (req, res) => __awaiter(void 0, void 0, void 0, func
                 status: 404,
             });
         }
-        const isPasswordValid = yield user_services_1.default.loginUserService(req.body);
+        const isPasswordValid = await user_services_1.default.loginUserService(req.body);
         if (!isPasswordValid) {
             return (0, apiResponse_1.sendApiResponse)(res, {
                 message: "Invalid credentials.",
@@ -62,12 +53,12 @@ const loginUserController = (req, res) => __awaiter(void 0, void 0, void 0, func
             });
         }
         // Generate access token
-        const accessToken = yield (0, jwtToken_1.generateAccessToken)({
+        const accessToken = await (0, jwtToken_1.generateAccessToken)({
             key: "email",
             value: req.body.email,
         });
         // Generate refresh token
-        const refreshToken = yield (0, jwtToken_1.generateRefreshToken)({
+        const refreshToken = await (0, jwtToken_1.generateRefreshToken)({
             key: "email",
             value: req.body.email,
         });
@@ -90,10 +81,10 @@ const loginUserController = (req, res) => __awaiter(void 0, void 0, void 0, func
             status: 500,
         });
     }
-});
-const allusersController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+};
+const allusersController = async (req, res) => {
     try {
-        const result = yield user_services_1.default.allUserGetService();
+        const result = await user_services_1.default.allUserGetService();
         (0, apiResponse_1.sendApiResponse)(res, {
             message: "Successfully retrieved all users.",
             status: 200,
@@ -106,8 +97,8 @@ const allusersController = (req, res) => __awaiter(void 0, void 0, void 0, funct
             status: 500,
         });
     }
-});
-const getProductsBoughtByUserController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+};
+const getProductsBoughtByUserController = async (req, res) => {
     try {
         const { userId } = req.params;
         if (!userId) {
@@ -116,7 +107,7 @@ const getProductsBoughtByUserController = (req, res) => __awaiter(void 0, void 0
                 status: 400,
             });
         }
-        const sales = yield user_services_1.default.getProductsBoughtByUserService(userId);
+        const sales = await user_services_1.default.getProductsBoughtByUserService(userId);
         return (0, apiResponse_1.sendApiResponse)(res, {
             message: "Successfully retrieved products bought by user",
             status: 200,
@@ -129,7 +120,7 @@ const getProductsBoughtByUserController = (req, res) => __awaiter(void 0, void 0
             status: 500,
         });
     }
-});
+};
 const userController = {
     registerUserController,
     loginUserController,

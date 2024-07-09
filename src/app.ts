@@ -32,7 +32,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // Root route handler
 app.get("/", (req, res) => {
-  res.send("PC-Builder-Pro server is running...🏃");
+  res.send("Alhamdullah PC-Builder-Pro server is running...🏃");
 });
 
 // API routes
