@@ -1,4 +1,8 @@
-import { PrismaClient, Product as PrismaProduct, Types } from "@prisma/client";
+import {
+  PrismaClient,
+  Product as PrismaProduct,
+  ProductTypes,
+} from "@prisma/client";
 import { IProduct, ITypes } from "./product.types";
 
 const prisma = new PrismaClient();
@@ -14,7 +18,7 @@ const addMultipleProductsService = async (
     const result = await prisma.product.createMany({
       data: datas,
     });
-    return result; // { count: number }
+    return result;
   } catch (error) {
     throw new Error("Failed to add products!");
   }
@@ -29,11 +33,13 @@ const getAllProductsService = async (): Promise<PrismaProduct[]> => {
   }
 };
 
-const getAllBrandNameService = async (type: Types): Promise<string[]> => {
+const getAllBrandNameService = async (
+  type: ProductTypes
+): Promise<string[]> => {
   try {
     const products = await prisma.product.findMany({
       select: { brand: true },
-      where: { type: type },
+      where: { type },
     });
 
     const uniqueBrands = Array.from(
@@ -45,14 +51,18 @@ const getAllBrandNameService = async (type: Types): Promise<string[]> => {
   }
 };
 
-const createBuyService = async (buyerId: string, productIds: string[]) => {
+const createBuyService = async (
+  buyerId: string,
+  productIds: string[]
+): Promise<any | null> => {
   try {
     const sales = await prisma.$transaction(
       productIds.map((productId) =>
         prisma.sell.create({
+          // @ts-ignore
           data: {
-            buyerId: buyerId,
-            productId: productId,
+            buyerId,
+            productId,
           },
         })
       )
@@ -114,8 +124,10 @@ const getSearchProductService = async (key: string) => {
     ];
 
     // Add type condition only if the search key is a valid enum value
-    if (isEnumValue(key, Types)) {
-      searchCriteria.push({ type: { equals: searchKeyUpperCase as Types } });
+    if (isEnumValue(key, ProductTypes)) {
+      searchCriteria.push({
+        type: { equals: searchKeyUpperCase as ProductTypes },
+      });
     }
 
     const products = await prisma.product.findMany({

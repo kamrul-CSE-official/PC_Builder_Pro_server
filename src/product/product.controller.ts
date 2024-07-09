@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { Types } from "@prisma/client";
+import { ProductTypes } from "@prisma/client";
 import { sendApiResponse } from "../utils/apiResponse";
 import productService from "./product.service";
 
@@ -40,14 +40,14 @@ const getAllBrandNameController = async (req: Request, res: Response) => {
     let { type } = req.params;
     type = type.toUpperCase();
 
-    if (!Object.values(Types).includes(type as Types)) {
+    if (!Object.values(ProductTypes).includes(type as ProductTypes)) {
       return sendApiResponse(res, {
         message: "Invalid product type.",
         status: 400,
       });
     }
 
-    const enumType = type as Types;
+    const enumType = type as ProductTypes;
     const result = await productService.getAllBrandNameService(enumType);
 
     sendApiResponse(res, {

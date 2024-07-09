@@ -13,7 +13,7 @@ enum Role {
   ADMIN
 }
 
-enum Types {
+enum ProductTypes {
   MONITOR
   MOTHERBOARD
   RAM
@@ -22,6 +22,13 @@ enum Types {
   SSD
   PROCESSOR
   OTHERS
+	@@map("Types")
+}
+
+enum PaymentTypes {
+  CARD
+  CASH_ON_DELIVERY
+  MOBILE_BANKING 
 }
 
 model User {
@@ -41,7 +48,7 @@ model User {
 model Product {
   id          String    @id @default(auto()) @map("_id") @db.ObjectId
   model       String    @unique
-  type        Types
+  type        ProductTypes
   brand       String
   title       String
   description String
@@ -82,5 +89,7 @@ model Sell {
   buyerId   String   @db.ObjectId
   product   Product  @relation(fields: [productId], references: [id], name: "ProductSales")
   productId String   @db.ObjectId
+  paymentType PaymentTypes
+  paymentDetails String
   createdAt DateTime @default(now())
 }
