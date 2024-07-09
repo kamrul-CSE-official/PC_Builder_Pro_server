@@ -17,7 +17,7 @@ const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const env_config_1 = __importDefault(require("../config/env.config"));
 const client_1 = require("@prisma/client");
 const prisma = new client_1.PrismaClient();
-const generateAccessToken = ({ key, value, }) => __awaiter(void 0, void 0, void 0, function* () {
+const generateAccessToken = (_a) => __awaiter(void 0, [_a], void 0, function* ({ key, value, }) {
     try {
         const whereClause = key === "id" ? { id: value } : { email: value };
         const user = yield prisma.user.findUnique({
@@ -42,7 +42,7 @@ const generateAccessToken = ({ key, value, }) => __awaiter(void 0, void 0, void 
     }
 });
 exports.generateAccessToken = generateAccessToken;
-const generateRefreshToken = ({ key, value, }) => __awaiter(void 0, void 0, void 0, function* () {
+const generateRefreshToken = (_a) => __awaiter(void 0, [_a], void 0, function* ({ key, value, }) {
     try {
         const whereClause = key === "id" ? { id: value } : { email: value };
         const user = yield prisma.user.findUnique({
