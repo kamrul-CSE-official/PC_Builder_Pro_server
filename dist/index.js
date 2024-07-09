@@ -20,7 +20,7 @@ function main() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             console.log("Database connected successfully 🎁");
-            app_1.default.listen(env_config_1.default.port, () => {
+            app_1.default.listen(Number(env_config_1.default.port), () => {
                 console.log(`Server is running on port ${env_config_1.default.port} 🏃`);
             });
         }

@@ -18,6 +18,7 @@ export type IProduct = {
   model: string;
   title: string;
   description: string;
+  stock: number;
   price: number;
   image: string;
   seller?: User;
