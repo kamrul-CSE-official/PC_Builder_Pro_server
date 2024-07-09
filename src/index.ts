@@ -9,17 +9,15 @@ async function startServer() {
     await prisma.$connect();
     console.log("Database connected successfully 🎁");
 
-    // Start the server after the database is connected
     app.listen(envConfig.port, () => {
       console.log(`Server is running on port ${envConfig.port} 🏃`);
     });
-  } catch (error: any) {
+  } catch (error) {
     console.error("Error connecting to the database:", error);
     process.exit(1);
   }
 }
 
-// Handle graceful shutdown
 process.on("SIGINT", async () => {
   console.log(
     "SIGINT signal received: closing HTTP server and disconnecting from database"

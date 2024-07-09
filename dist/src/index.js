@@ -21,7 +21,6 @@ function startServer() {
         try {
             yield prisma.$connect();
             console.log("Database connected successfully 🎁");
-            // Start the server after the database is connected
             app_1.default.listen(env_config_1.default.port, () => {
                 console.log(`Server is running on port ${env_config_1.default.port} 🏃`);
             });
@@ -32,7 +31,6 @@ function startServer() {
         }
     });
 }
-// Handle graceful shutdown
 process.on("SIGINT", () => __awaiter(void 0, void 0, void 0, function* () {
     console.log("SIGINT signal received: closing HTTP server and disconnecting from database");
     yield prisma.$disconnect();
