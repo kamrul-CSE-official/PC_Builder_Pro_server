@@ -33,7 +33,7 @@ const routes = [
   {
     method: "POST",
     path: "/buy",
-    controller: productController.buyProductCOntroller,
+    controller: productController.buyProductController,
   },
 ];
 

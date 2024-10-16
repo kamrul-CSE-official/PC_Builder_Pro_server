@@ -36,7 +36,7 @@ const routes = [
     {
         method: "POST",
         path: "/buy",
-        controller: product_controller_1.default.buyProductCOntroller,
+        controller: product_controller_1.default.buyProductController,
     },
 ];
 routes.forEach(({ method, path, controller }) => {

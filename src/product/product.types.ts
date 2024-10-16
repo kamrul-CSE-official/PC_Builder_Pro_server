@@ -1,4 +1,4 @@
-import { Review, Comment, User } from "@prisma/client";
+import { Review, User } from "@prisma/client";
 
 export enum ITypes {
   MONITOR,

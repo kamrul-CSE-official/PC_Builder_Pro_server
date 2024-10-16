@@ -1,4 +1,4 @@
-import { PrismaClient, Product, ProductTypes } from "@prisma/client";
+import { PaymentTypes, PrismaClient, Product, ProductTypes } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
@@ -6,24 +6,32 @@ const isEnumValue = (key: string, enumObject: any): boolean => {
   return Object.values(enumObject).includes(key.toUpperCase());
 };
 
-const addMultipleProductsService = async (
-  datas: any[]
-): Promise<{ count: number }> => {
+
+
+const addMultipleProductsService = async (datas: any[]): Promise<{ count: number }> => {
   try {
-    const result = await prisma.product.createMany({
-      data: datas,
-    });
-    return result;
+    let createdProductsCount = 0;
+
+    // Create products one by one to avoid transaction issues
+    for (const data of datas) {
+      await prisma.product.create({ data });
+      createdProductsCount++;
+    }
+
+    return { count: createdProductsCount };
   } catch (error) {
     throw new Error("Failed to add products!");
   }
 };
 
-const getAllProductsService = async (): Promise<Product[]> => {
+
+
+const getAllProductsService = async (): Promise<Partial<Product[]>> => {
   try {
     const result = await prisma.product.findMany();
     return result;
   } catch (error) {
+    console.log(error)
     throw new Error("Failed to find products!");
   }
 };
@@ -46,30 +54,39 @@ const getAllBrandNameService = async (
   }
 };
 
+
+
 const createBuyService = async (
-  buyerId: string,
-  productIds: string[]
+  products: { buyerId: string; productId: string; quantities: number }[],
+  paymentType: PaymentTypes,
+  paymentDetails: string
 ): Promise<any | null> => {
   try {
     const sales = await prisma.$transaction(
-      productIds.map((productId) =>
+      products.map(({ buyerId, productId, quantities }) =>
         prisma.sell.create({
-          // @ts-ignore
           data: {
             buyerId,
             productId,
+            quantity: quantities,
+            paymentType,
+            paymentDetails,
           },
         })
       )
     );
     return sales;
   } catch (error) {
+    console.error(error); // Log the error for debugging
     throw new Error("Failed to create sales!");
   }
 };
 
+
+
 const getBestSellingProductsService = async () => {
   try {
+    // Step 1: Get the best-selling products by grouping sales
     const bestSellingProducts = await prisma.sell.groupBy({
       by: ["productId"],
       _count: {
@@ -80,30 +97,43 @@ const getBestSellingProductsService = async () => {
           productId: "desc",
         },
       },
-      take: 10, // Adjust the number to get top N best-selling products
+      take: 10, // Limit to top N best-selling products
     });
 
+    // Step 2: Extract product IDs from best-selling products
+    const bestSellingProductIds = bestSellingProducts.map((sell) => sell.productId);
+
+    // Step 3: Fetch product details for the best-selling product IDs
     const products = await prisma.product.findMany({
       where: {
         id: {
-          in: bestSellingProducts.map((sell) => sell.productId),
+          in: bestSellingProductIds,
         },
       },
     });
 
-    const result = bestSellingProducts.map((sell) => {
+    // Step 4: Map the best-selling products with their respective product details
+    return bestSellingProducts.map((sell) => {
       const product = products.find((p) => p.id === sell.productId);
       return {
-        product,
-        count: sell._count.productId,
+        id: product?.id,                     
+        name: product?.title,                
+        price: product?.price,    
+        image: product?.image,
+        brand: product?.brand,
+        type: product?.type,  
+        stock: product?.stock,
+        // reviews: product?.reviews,          
+        count: sell?._count.productId,      
       };
     });
-
-    return result;
   } catch (error) {
+    console.error(error); 
     throw new Error("Failed to retrieve best-selling products!");
   }
 };
+
+
 
 const getSearchProductService = async (key: string) => {
   try {

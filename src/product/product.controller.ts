@@ -12,6 +12,7 @@ const addMultipleProducts = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (err: any) {
+    console.log(err.message);
     sendApiResponse(res, {
       message: "Failed to add products.",
       status: 500,
@@ -63,21 +64,26 @@ const getAllBrandNameController = async (req: Request, res: Response) => {
   }
 };
 
-const buyProductCOntroller = async (req: Request, res: Response) => {
+
+
+const buyProductController = async (req: Request, res: Response) => {
   try {
-    const { buyerId, productIds } = req.body;
+    const { products, paymentType, paymentDetails } = req.body;
+
+    // Validate the incoming data
     if (
-      !buyerId ||
-      !productIds ||
-      !Array.isArray(productIds) ||
-      productIds.length === 0
+      !products ||
+      !Array.isArray(products) ||
+      products.length === 0 ||
+      !paymentType || 
+      !paymentDetails 
     ) {
-      return res
-        .status(400)
-        .json({ message: "Buyer ID and an array of Product IDs are required" });
+      return res.status(400).json({
+        message: "Products array, payment type, and payment details are required.",
+      });
     }
 
-    const buy = await productService.createBuyService(buyerId, productIds);
+    const buy = await productService.createBuyService(products, paymentType, paymentDetails);
 
     sendApiResponse(res, {
       message: "Buy created successfully.",
@@ -85,12 +91,15 @@ const buyProductCOntroller = async (req: Request, res: Response) => {
       data: buy,
     });
   } catch (err: any) {
+    console.error(err); 
     sendApiResponse(res, {
-      message: "Fail to create buy product.",
+      message: "Failed to create buy product.",
       status: 500,
     });
   }
 };
+
+
 
 const getBestSellingProductsController = async (
   req: Request,
@@ -142,7 +151,7 @@ const productController = {
   addMultipleProducts,
   getAllProductsController,
   getAllBrandNameController,
-  buyProductCOntroller,
+  buyProductController,
   getBestSellingProductsController,
   getSearchProductController,
 };

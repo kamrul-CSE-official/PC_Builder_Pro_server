@@ -16,6 +16,7 @@ const addMultipleProducts = async (req, res) => {
         });
     }
     catch (err) {
+        console.log(err.message);
         (0, apiResponse_1.sendApiResponse)(res, {
             message: "Failed to add products.",
             status: 500,
@@ -63,18 +64,20 @@ const getAllBrandNameController = async (req, res) => {
         });
     }
 };
-const buyProductCOntroller = async (req, res) => {
+const buyProductController = async (req, res) => {
     try {
-        const { buyerId, productIds } = req.body;
-        if (!buyerId ||
-            !productIds ||
-            !Array.isArray(productIds) ||
-            productIds.length === 0) {
-            return res
-                .status(400)
-                .json({ message: "Buyer ID and an array of Product IDs are required" });
+        const { products, paymentType, paymentDetails } = req.body;
+        // Validate the incoming data
+        if (!products ||
+            !Array.isArray(products) ||
+            products.length === 0 ||
+            !paymentType ||
+            !paymentDetails) {
+            return res.status(400).json({
+                message: "Products array, payment type, and payment details are required.",
+            });
         }
-        const buy = await product_service_1.default.createBuyService(buyerId, productIds);
+        const buy = await product_service_1.default.createBuyService(products, paymentType, paymentDetails);
         (0, apiResponse_1.sendApiResponse)(res, {
             message: "Buy created successfully.",
             status: 201,
@@ -82,8 +85,9 @@ const buyProductCOntroller = async (req, res) => {
         });
     }
     catch (err) {
+        console.error(err);
         (0, apiResponse_1.sendApiResponse)(res, {
-            message: "Fail to create buy product.",
+            message: "Failed to create buy product.",
             status: 500,
         });
     }
@@ -131,7 +135,7 @@ const productController = {
     addMultipleProducts,
     getAllProductsController,
     getAllBrandNameController,
-    buyProductCOntroller,
+    buyProductController,
     getBestSellingProductsController,
     getSearchProductController,
 };

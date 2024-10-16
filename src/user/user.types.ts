@@ -1,4 +1,4 @@
-import { Role, Review, Comment, Product, User } from '@prisma/client';
+import { Role, Review, Product, User } from '@prisma/client';
 
 export type IUser = {
     id?: string;
